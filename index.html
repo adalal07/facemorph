@@ -1,0 +1,698 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Project 3: Face Morphing and Modelling a Photo Collection</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="11c0aaf5-eccb-804b-b4ba-fe30b0cc95b1" class="page sans"><header><h1 class="page-title">Project 3: Face Morphing and Modelling a Photo Collection</h1><p class="page-description"></p></header><div class="page-body"><h2 id="11c0aaf5-eccb-80c8-abc2-dadbe4438216" class="">Background</h2><p id="11c0aaf5-eccb-80a4-8a37-df2ae4064df0" class="">In this project, we will be going through the process of morphing faces together, whether that an animation going between two friends or a caricature of your face. For morphing, we need to account for the two aspects of actually changing one image into the format of another: the shape/features of the objects and the colors between the two images. By definition, a morph is a simultaneous warp and cross-dissolve of our two or more images.</p><p id="11c0aaf5-eccb-809d-9599-d25f23f4b8f7" class="">
+</p><p id="11c0aaf5-eccb-8073-8c5b-f4165984be42" class="">Let’s start by warping our images. The purpose of the warp is ensure the alignment of our objects in each of the images. Otherwise, when we cross-dissolve, we would end up with misalignment which would make our morph looking messy, and more generally not like a morph. For the morphing process, we will use the following example between me and the popular hip-hop artist, Kanye West. </p><div id="11c0aaf5-eccb-808b-8a40-cc0d5af20635" class="column-list"><div id="d2f43d8e-834f-4f5d-aa89-1646774e8493" style="width:50%" class="column"><figure id="11c0aaf5-eccb-803c-922a-f995380eafa4" class="image" style="text-align:right"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/me_3.jpg"><img style="width:288px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/me_3.jpg"/></a></figure></div><div id="da0e5076-9b98-4420-9433-d68830359916" style="width:50%" class="column"><figure id="11c0aaf5-eccb-8006-b0af-e350fe7c03bf" class="image" style="text-align:left"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/ye.png"><img style="width:288px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/ye.png"/></a></figure></div></div><p id="11c0aaf5-eccb-80de-9172-d6f510e765f8" class="">Let’s jump into the morphing process!</p><h2 id="11c0aaf5-eccb-8009-baee-f9eb7186408d" class="">Part 1: Defining Correspondences</h2><p id="11c0aaf5-eccb-80ef-8992-ee2fbb2e9c49" class="">The first step of warping is defining correspondence points or landmarks that we see in both images. To reach a common shape for our objects, we would need to match the correspondences in one image to the other. To define these correspondences, I utilized the provided labeling tool to get correspondences like the following.</p><p id="11c0aaf5-eccb-8099-9a68-ea431a914daa" class="">
+</p><figure id="11c0aaf5-eccb-808b-8839-c077c98df90d" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image.png"><img style="width:624px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image.png"/></a></figure><p id="11c0aaf5-eccb-8055-98e2-de03008a669c" class="">
+</p><p id="11c0aaf5-eccb-80a5-b17a-f65001bd729c" class="">I the figure we can see the original correspondence points (orange) defined for each of the images, where there is a 1-to-1 correspondence between the two images. We also see another set of blue points on each of the images. The set of blue points is the target shape/set of correspondence points that we want to warp each of the images to. How do we determine the target set of points?</p><h2 id="11c0aaf5-eccb-8091-98e7-ca2ff3b7dfa1" class="">Part 2: Computing the Midway Face</h2><p id="11c0aaf5-eccb-804e-9e4b-cf95303ceda9" class="">Before trying to create a morph animation, let’s look at the specific case of the midway face between our two images. In the previous part, we introduced a target set of correspondence points, and here we can create a more formal definition. To reduce the amount of warping we perform, we would ideally want these targets to be somewhere between our two images. In the special case of a midway face, we can define the target set to be the average of our two sets of correspondences.</p><p id="11c0aaf5-eccb-8016-8fc7-fdf1e5e09976" class="">
+</p><p id="11c0aaf5-eccb-80bd-a26e-dc81857f832e" class="">After, we have our target set, we need to define our warping algorithm. The choice of algorithm here will be inverse warping since we avoid needing to splat our result and instead just interpolating values. However, to perform a warp, we need a transformation matrix that we apply to each of the pixels in the source image to get the destination image. </p><p id="11c0aaf5-eccb-8031-a277-cd91a8ac3957" class="">
+</p><p id="11c0aaf5-eccb-804c-bdc3-d9971c6b20c6" class="">We can simplify this process by creating a mesh representing the shape of the object. The method of choice is Delaunay Triangulation between the sets of correspondence points we found earlier. Since we have a 1-to-1 correspondence between all three sets (image 1, image 2, and the target set), we can perform Delaunay Triangulation on the target set to get triangles for each of the sets.</p><figure id="11c0aaf5-eccb-8080-b9e4-ea5bd0bb72b7" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%201.png"><img style="width:624px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%201.png"/></a></figure><p id="11c0aaf5-eccb-804b-85bd-f1d8a2672533" class="">
+</p><p id="11c0aaf5-eccb-8048-84bc-dfd2fb4dc3b3" class="">The figure above shows the triangulation for each of the sets we saw overlayed on the original two images. The individual original image meshes (orange) are the derived triangulations using the simplices from the target set triangulation (blue). With this step complete, we have the average shape of the two faces.</p><p id="11c0aaf5-eccb-805d-8e3f-cbfaca9eb77c" class="">
+</p><p id="11c0aaf5-eccb-8049-a3ba-c40f3c76bcac" class="">The next step is to calculate and perform the affine transform to get each image in shape of target set of correspondences. One reason for doing the triangulation was to simplify this part of the process since we can use the triangles to define specific transforms for specific sections of the image. For each triangle in the original image and the corresponding triangle in the target, we can create homogenous point matrices containing the vertices of the triangles. The transformation from the target points to the original image points is what we trying to find to perform an inverse warping. Another way of looking at this process is writing out each of the six individual equations that define the system to find the six coefficients we need to fill out the affine transform matrix. This is method I used to calculate a transformation for each triangle in both of the images to the corresponding triangle in the target image.</p><p id="11c0aaf5-eccb-8010-b540-d99c267b1bb0" class="">
+</p><p id="11c0aaf5-eccb-8020-93dc-cdb242fd16fe" class="">After finding our affine transformations, we can now apply each of the transformations to the pixels of the original image to warp it into the shape of our target. For any given triangle, we can collect all of the points that are contained within the triangle using the <code>skimage.draw.polygon</code> function. We can reformat all of the points into homogenous coordinates and apply the inverse transformations we found earlier. However, since we are generalizing a transformation on the triangle to all of the pixels in the triangle, we will have a lot of transformations that don’t end up as integers. To address these pixel values, we will interpolate the pixel values using a nearest neighbors approach in the <code>scipy.interpolate.griddata</code> function. With this interpolation, our inverse warping algoirthm is complete for one triangle and can be appleid for all triangles in both images.</p><figure id="11c0aaf5-eccb-8036-8ce9-d074f9106138" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%202.png"><img style="width:624px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%202.png"/></a></figure><p id="11c0aaf5-eccb-804b-9eaf-cfafc618b534" class="">The figure above shows the warped images with respect to the mid-points we calculated earlier. With the warp done, we can apply a cross-dissolve function where our factor of dissolution is 0.5.</p><figure id="11c0aaf5-eccb-8043-9df4-ff9630b67ce7" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%203.png"><img style="width:384px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%203.png"/></a></figure><p id="11c0aaf5-eccb-801f-b235-d1551c9bdba1" class="">The is our final midway face for the example used above. One point to notice is how the hair of the people in the two images was very different, causing the differences to come through in the mid-way image. In the next example with Stephen Curry and Kobe Bryant, we see this issue disappear since the faces share more structural similarities. Let’s look at the step by step process for that case!</p><div id="11c0aaf5-eccb-8006-98b4-d2f502bc729d" class="column-list"><div id="d9375c7c-f0f6-45d6-8950-8cf8a1f7259d" style="width:50%" class="column"><figure id="f6d58971-0144-4c4e-8411-1a6c9407b3b1" class="image" style="text-align:right"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/steph.jpg"><img style="width:288px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/steph.jpg"/></a></figure></div><div id="26a9cd0c-9d91-4956-ad07-9f5608ef1041" style="width:50%" class="column"><figure id="cedd83e9-e989-4675-b551-855072cdb68b" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/kobe.jpg"><img style="width:288px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/kobe.jpg"/></a></figure></div></div><p id="11c0aaf5-eccb-806e-acdc-db47b7631902" class="">Let’s look at the correspondence points and the respective triangulations for each image and the target.</p><figure id="11c0aaf5-eccb-8018-bf15-d3ae93623e48" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%204.png"><img style="width:624px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%204.png"/></a></figure><figure id="11c0aaf5-eccb-80cb-ab22-d9684568e8fe" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%205.png"><img style="width:624px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%205.png"/></a></figure><p id="11c0aaf5-eccb-80c8-8e35-f715848430cf" class="">
+</p><p id="11c0aaf5-eccb-805b-be77-d1c53676d75f" class="">Let’s look at the result of the individual warping processes and then the combined mid-way image.</p><figure id="11c0aaf5-eccb-8028-9240-cf3dd785e79c" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%206.png"><img style="width:624px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%206.png"/></a></figure><figure id="11c0aaf5-eccb-808b-9796-f2c10ce89b6e" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%207.png"><img style="width:336px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%207.png"/></a></figure><p id="11c0aaf5-eccb-8003-a2d0-c0470f651282" class="">Here, we can see that the face has a much better morph for the midway image due to more structual similarities. We do see an issue around the clothing, but that is because there was a lack of any correspondence points defined on the actual clothing. Now, let’s try creating a sequence of frames to create the morph animation!</p><h2 id="11c0aaf5-eccb-8084-b474-c6a8b3faf5cb" class="">Part 3: Morph Sequence</h2><p id="11c0aaf5-eccb-80d6-ac25-da47138ce32b" class="">For the morph sequence, we can define the a morph function to perform the warp and cross-dissolve operation we defined in the previous part. However, to create an animation, we need to be able to create frames for the morph at different points between the two images instead of only defining the mid-way face. To do this, we will be passing in <code>warp_frac</code> and <code>dissolve_frac</code> as parameters to the function. The <code>warp_frac</code> will be used as the point between the two image shapes that we want to warp to as our target. In the mid-way face case, our <code>warp_frac</code> was 0.5. The equation to define the target point set is now:</p><figure id="11c0aaf5-eccb-80b7-a1a3-ce1c6ac44129" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>t</mi><mi>a</mi><mi>r</mi><mi>g</mi><mi>e</mi><mi>t</mi><mo>=</mo><mi>w</mi><mi>a</mi><mi>r</mi><mi>p</mi><mi mathvariant="normal">_</mi><mi>f</mi><mi>r</mi><mi>a</mi><mi>c</mi><mtext> </mtext><mo>∗</mo><mi>p</mi><mi>t</mi><msub><mi>s</mi><mrow><mi>i</mi><mi>m</mi><mi>g</mi><mi mathvariant="normal">_</mi><mi>a</mi></mrow></msub><mo>+</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>w</mi><mi>a</mi><mi>r</mi><mi>p</mi><mi mathvariant="normal">_</mi><mi>f</mi><mi>r</mi><mi>a</mi><mi>c</mi><mo stretchy="false">)</mo><mtext> </mtext><mo>∗</mo><mi>p</mi><mi>t</mi><msub><mi>s</mi><mrow><mi>i</mi><mi>m</mi><mi>g</mi><mi mathvariant="normal">_</mi><mi>b</mi></mrow></msub></mrow><annotation encoding="application/x-tex">target = warp\_frac\ * pts_{img\_a} + (1 - warp\_frac)\ * pts_{img\_b}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8095em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">t</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">e</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0044em;vertical-align:-0.31em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">p</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">a</span><span class="mord mathnormal">c</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.9821em;vertical-align:-0.367em;"></span><span class="mord mathnormal">pt</span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">im</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span><span class="mord mtight" style="margin-right:0.02778em;">_</span><span class="mord mathnormal mtight">a</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.367em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.06em;vertical-align:-0.31em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">p</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">a</span><span class="mord mathnormal">c</span><span class="mclose">)</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.9821em;vertical-align:-0.367em;"></span><span class="mord mathnormal">pt</span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">im</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span><span class="mord mtight" style="margin-right:0.02778em;">_</span><span class="mord mathnormal mtight">b</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.367em;"><span></span></span></span></span></span></span></span></span></span></span></div></figure><p id="11c0aaf5-eccb-80ec-adf4-f1fc88f4954e" class="">Similarly, we define our new cross-dissolve equation as well.</p><figure id="11c0aaf5-eccb-807d-9715-fa0d2198f928" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>t</mi><mi>a</mi><mi>r</mi><mi>g</mi><mi>e</mi><mi>t</mi><mi mathvariant="normal">_</mi><mi>r</mi><mi>g</mi><mi>b</mi><mo>=</mo><mi>d</mi><mi>i</mi><mi>s</mi><mi>s</mi><mi>o</mi><mi>l</mi><mi>v</mi><mi>e</mi><mi mathvariant="normal">_</mi><mi>f</mi><mi>r</mi><mi>a</mi><mi>c</mi><mtext> </mtext><mo>∗</mo><mi>r</mi><mi>g</mi><msub><mi>b</mi><mrow><mi>i</mi><mi>m</mi><mi>g</mi><mi mathvariant="normal">_</mi><mi>a</mi></mrow></msub><mo>+</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>d</mi><mi>i</mi><mi>s</mi><mi>s</mi><mi>o</mi><mi>l</mi><mi>v</mi><mi>e</mi><mi mathvariant="normal">_</mi><mi>f</mi><mi>r</mi><mi>a</mi><mi>c</mi><mo stretchy="false">)</mo><mtext> </mtext><mo>∗</mo><mi>r</mi><mi>g</mi><msub><mi>b</mi><mrow><mi>i</mi><mi>m</mi><mi>g</mi><mi mathvariant="normal">_</mi><mi>b</mi></mrow></msub></mrow><annotation encoding="application/x-tex">target\_rgb = dissolve\_frac\ * rgb_{img\_a} + (1 - dissolve\_frac)\ * rgb_{img\_b}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0044em;vertical-align:-0.31em;"></span><span class="mord mathnormal">t</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">e</span><span class="mord mathnormal">t</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0044em;vertical-align:-0.31em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">i</span><span class="mord mathnormal">sso</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mord mathnormal">e</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">a</span><span class="mord mathnormal">c</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0614em;vertical-align:-0.367em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">im</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span><span class="mord mtight" style="margin-right:0.02778em;">_</span><span class="mord mathnormal mtight">a</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.367em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.06em;vertical-align:-0.31em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">i</span><span class="mord mathnormal">sso</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mord mathnormal">e</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">a</span><span class="mord mathnormal">c</span><span class="mclose">)</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0614em;vertical-align:-0.367em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">im</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">g</span><span class="mord mtight" style="margin-right:0.02778em;">_</span><span class="mord mathnormal mtight">b</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.367em;"><span></span></span></span></span></span></span></span></span></span></span></div></figure><p id="11c0aaf5-eccb-8078-9c08-d10249e612ce" class="">Looping over the range between 0 and 1, we can get a series of frames to show to the progression of the morph. The morph animation between my face and Kanye West is located at the following link: <a href="https://drive.google.com/file/d/13H-Osrf6H39NClcGPT-IuaPy6G0qcvTp/view?usp=drive_link">https://drive.google.com/file/d/13H-Osrf6H39NClcGPT-IuaPy6G0qcvTp/view?usp=drive_link</a>. The morph animation between Stephen Curry and Kobe Bryant is at the following link: <a href="https://drive.google.com/file/d/12iUOzmrAK6RKOYpjhef1IRofA6WRccHi/view?usp=drive_link">https://drive.google.com/file/d/12iUOzmrAK6RKOYpjhef1IRofA6WRccHi/view?usp=drive_link</a>.</p><p id="11c0aaf5-eccb-805e-9ddc-c48db22bb07f" class="">
+</p><p id="11c0aaf5-eccb-80c7-aa82-d03c8c7c23ee" class="">There was an issue with adding it to the website along the remaining GIFs and videos. </p><h2 id="11c0aaf5-eccb-805f-99c9-d7492c4b0f29" class="">Part 4: Population Mean Face</h2><p id="11c0aaf5-eccb-8096-a3b2-d9c151b28c29" class="">To create a caricature in the following part, we need to get a average face of a population or subsample of a population. In this part, we will be deriving the average face in the Danes dataset. Each image in the Danes dataset is a headshot of a Danish person standing in front of a green background with corresponding key points similar to those we defined for Part 1 of this project. </p><p id="11c0aaf5-eccb-8091-aa24-d34c39fa40b5" class="">
+</p><p id="11c0aaf5-eccb-80d0-bb26-f1c57b35a345" class="">To compute the average face, we need to warp all of the faces in our dataset to align with some average shape specific to that population. In our case, calculating the average shape of a face in the dataset is as simple as averaging across all of the key points that we want to include in our population. With this calculation, we can run a similar Delaunay triangulation on the target shape to get the following comparison. </p><figure id="11c0aaf5-eccb-80bc-ad44-f026b45f3aed" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%208.png"><img style="width:624px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%208.png"/></a></figure><p id="11c0aaf5-eccb-800d-a17f-e626f26e00ac" class="">We can notice that th images are much wider, meaning more of our triangles seem to be longer in a sense. Using our predefined functions from before, we can warp all of the images in our dataset to the corresponding target shape we calculated. Below are a few examples showing the warping.</p><figure id="11c0aaf5-eccb-8077-a3e5-d085f0dc441c" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%209.png"><img style="width:707.9453125px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%209.png"/></a></figure><p id="11c0aaf5-eccb-8030-aa09-edb719b9b950" class="">With our warping applied to each image, we can take an average across all of the images to get our average Dane!</p><figure id="11c0aaf5-eccb-8096-b703-fc17f1501224" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%2010.png"><img style="width:576px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%2010.png"/></a></figure><p id="11c0aaf5-eccb-8096-851d-c5aa9934da37" class="">With this population’s average face, we can do quite a few cool things. One output in particular is taking our image from before and see how it looks after being transformed to the average Dane face and vice versa.</p><figure id="11c0aaf5-eccb-80b5-ae09-ffd743a1ce70" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%2011.png"><img style="width:552px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%2011.png"/></a></figure><p id="11c0aaf5-eccb-803d-8c2b-c509c36e6150" class="">On the left, we see my face warped to match the shape of the average Dane and the right showing the average Dane face warped to my face. Due to the differences in sizes of images and other structural differences in the images, we do see some error in the warping, but we can clearly see a caricature-type sytle in these resulting images.</p><h2 id="11c0aaf5-eccb-8053-9fa7-ef85e0aabb1d" class="">Part 5: Caricature</h2><p id="11c0aaf5-eccb-8049-8f91-c2ae58d0ce43" class="">Taking this operation that we performed at the end of the last part to the next level, we can create an caricature of our face. A caricature is an exaggerated photo of someone or something, where certain features are portrayed extremely. We can use the average Dane face and extract the “essence” of the average by subtracting the transformed image of my face from above from my original image. This is essentially extracting the warping we are performing in the form a matrix which we can scale and apply. Performing this process with a <code>SCALE  = 1</code> (without normalization), gives us a caricature like the following.</p><figure id="11c0aaf5-eccb-80e4-928a-d91c59bfb1da" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%2012.png"><img style="width:336px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%2012.png"/></a></figure><p id="11c0aaf5-eccb-8044-b347-e432f248fc58" class="">Let’s do some other cool things with this technique!</p><h2 id="11c0aaf5-eccb-80e3-ad9c-c3089f69e294" class="">Part 6: Bells &amp; Whistles</h2><p id="11c0aaf5-eccb-806b-8704-c7a26e22e703" class="">
+</p><p id="11c0aaf5-eccb-80ef-bbec-cb0fe8a04aa6" class="">My first Bells &amp; Whistle is changing the gender and race of my friend, Kailash. The average population face which I chose is for Southasian Women. </p><div id="11c0aaf5-eccb-8097-b55b-c51538c0e7ac" class="column-list"><div id="dbb16d14-a1c6-471f-8404-a5e76ef87ca0" style="width:50%" class="column"><figure id="11c0aaf5-eccb-80a7-b39c-c2619773da80" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/kai_tf.jpeg"><img style="width:331px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/kai_tf.jpeg"/></a></figure></div><div id="b3680f6c-d76b-4e3b-9c4e-6b670b3fa738" style="width:50%" class="column"><figure id="11c0aaf5-eccb-8007-8d0c-ef35dfcd7f3a" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/avg_sasian_female_face.jpeg"><img style="width:288px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/avg_sasian_female_face.jpeg"/></a></figure></div></div><p id="11c0aaf5-eccb-804e-9672-d0033b4f944b" class="">There were three main breakdowns here. First is changing only the shape of my friend’s face to the shape of the average face in the population. This involves warping my friend’s face to the face shape defined for the average face of the population. Second is changing only the appearance of my friend’s face by warping the average face of the population to my friend’s face and then applying a cross-dissolve. The final image is the mid-way image for the two images above!</p><div id="11c0aaf5-eccb-8042-b8a2-cdd0539ceb52" class="column-list"><div id="b0f9c91e-5789-4b87-ab7e-3b501db2463d" style="width:50%" class="column"><figure id="11c0aaf5-eccb-80e3-85a1-c98cd3f15309" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%2013.png"><img style="width:330.9921875px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%2013.png"/></a></figure></div><div id="89021a4a-12a6-413a-8eb9-e2591a01f597" style="width:50%" class="column"><figure id="11c0aaf5-eccb-803e-9db8-d3a88a44914a" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%2014.png"><img style="width:330.9921875px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%2014.png"/></a></figure></div></div><figure id="11c0aaf5-eccb-8058-98e0-c15a8c8825f9" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%2015.png"><img style="width:351px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%2015.png"/></a></figure><p id="11c0aaf5-eccb-8006-a20d-ce191802119e" class="">The morph sequence for the images above can be found at: <a href="https://drive.google.com/file/d/1fQe3q-Ti7li1OSpv4W6nDhYvUHu5-Izv/view?usp=drive_link">https://drive.google.com/file/d/1fQe3q-Ti7li1OSpv4W6nDhYvUHu5-Izv/view?usp=drive_link</a>.</p><p id="11c0aaf5-eccb-80a1-9f23-c29e6bf179d6" class="">
+</p><p id="11c0aaf5-eccb-8060-8017-f59083fc9ea0" class="">Another exploration I did was changing my own image’s race using the Danish average face I found in Part 4.</p><figure id="11c0aaf5-eccb-8037-8a30-e0bafeac2e5d" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%2016.png"><img style="width:351px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/image%2016.png"/></a></figure><p id="11c0aaf5-eccb-80b8-8ea1-f11bc710fccf" class="">For my last Bells and Whistles, I created a morph sequence for a few of my friends including Kailash above. The friend’s names are Advay, Anirudh, and Sasvath in the order they are morphed after Kailash. To create this sequence, I applied three different morphs between images and then combined the sequences together to get the final sequence. The GIF can be found at this link: <a href="https://drive.google.com/file/d/1Xh95lsMzIZomZrvmUXIA2vnkqCmmAQ51/view?usp=drive_link">https://drive.google.com/file/d/1Xh95lsMzIZomZrvmUXIA2vnkqCmmAQ51/view?usp=drive_link</a>. The video can be found at this link: <a href="https://drive.google.com/file/d/12enmcHTR6QeUXpmIFdIAU7bIt0Ir37ti/view?usp=drive_link">https://drive.google.com/file/d/12enmcHTR6QeUXpmIFdIAU7bIt0Ir37ti/view?usp=drive_link</a>.</p><figure id="11c0aaf5-eccb-80b4-bc33-d3729bb073fe" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/fkai.jpeg"><img style="width:400px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/fkai.jpeg"/></a></figure><figure id="11c0aaf5-eccb-8087-946f-d4f7def55f92" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/favday.jpeg"><img style="width:400px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/favday.jpeg"/></a></figure><figure id="11c0aaf5-eccb-80de-9012-e413088c937f" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/fani.jpeg"><img style="width:400px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/fani.jpeg"/></a></figure><figure id="11c0aaf5-eccb-80a9-be0b-fd5d65b7f911" class="image"><a href="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/fsas.jpeg"><img style="width:400px" src="Project%203%20Face%20Morphing%20and%20Modelling%20a%20Photo%20Coll%2011c0aaf5eccb804bb4bafe30b0cc95b1/fsas.jpeg"/></a></figure><p id="11c0aaf5-eccb-80ac-8ee4-fb6e65e273e9" class="">
+</p><p id="11c0aaf5-eccb-80fc-9536-d72680929b4c" class="">Thank you for taking a look at my project! If any of the links don’t work, please use the following link to gain access to all of the visuals: <a href="https://drive.google.com/file/d/12enmcHTR6QeUXpmIFdIAU7bIt0Ir37ti/view?usp=drive_link">https://drive.google.com/file/d/12enmcHTR6QeUXpmIFdIAU7bIt0Ir37ti/view?usp=drive_link</a></p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
